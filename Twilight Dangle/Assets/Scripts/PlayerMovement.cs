@@ -1,42 +1,44 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    public float speed = 5000.0f; // Set player's movement speed.
-    public float rotationSpeed = 500.0f; // Set player's rotation speed.
-
+    public float speed = 15.0f;  // Increased movement speed
+    public float rotationSpeed = 120.0f;  // Rotation speed
     public float jumpForce = 5.0f;
 
-    private Rigidbody rb; // Reference to player's Rigidbody.
+    private Rigidbody rb;
 
-    // Start is called before the first frame update
     private void Start()
     {
-        rb = GetComponent<Rigidbody>(); // Access player's Rigidbody.
+        rb = GetComponent<Rigidbody>();
+        rb.freezeRotation = true; // Prevents tipping over
+        rb.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic; // Ensures no wall phasing
+        rb.interpolation = RigidbodyInterpolation.Interpolate; // Smoother movement
     }
 
-    // Update is called once per frame
     void Update()
     {
-        if (Input.GetButtonDown("Jump")) {
+        if (Input.GetButtonDown("Jump") && Mathf.Abs(rb.velocity.y) < 0.1f)
+        {
             rb.AddForce(Vector3.up * jumpForce, ForceMode.VelocityChange);
         }
     }
 
-
-    // Handle physics-based movement and rotation.
     private void FixedUpdate()
     {
-        // Move player based on vertical input.
         float moveVertical = Input.GetAxis("Vertical");
-        Vector3 movement = transform.forward * moveVertical * speed * Time.fixedDeltaTime;
-        rb.MovePosition(rb.position + movement);
+        float moveHorizontal = Input.GetAxis("Horizontal");
 
-        // Rotate player based on horizontal input.
-        float turn = Input.GetAxis("Horizontal") * rotationSpeed * Time.fixedDeltaTime;
-        Quaternion turnRotation = Quaternion.Euler(0f, turn, 0f);
-        rb.MoveRotation(rb.rotation * turnRotation);
+        // Move the player with Rigidbody velocity (prevents skipping walls)
+        Vector3 moveDirection = transform.forward * moveVertical * speed;
+        rb.velocity = new Vector3(moveDirection.x, rb.velocity.y, moveDirection.z);
+
+        // Rotate player smoothly while moving
+        if (moveHorizontal != 0)
+        {
+            float turn = moveHorizontal * rotationSpeed * Time.fixedDeltaTime;
+            Quaternion turnRotation = Quaternion.Euler(0f, turn, 0f);
+            rb.MoveRotation(rb.rotation * turnRotation);
+        }
     }
 }
