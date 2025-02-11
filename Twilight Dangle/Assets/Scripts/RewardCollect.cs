@@ -18,11 +18,9 @@ public class RewardCollect : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player"))
+        if (other.CompareTag("Player")) // Ensure the player has the correct tag
         {
-            //Destroy the reward collectible
-            Destroy(gameObject);
-
+            FindObjectOfType<RewardUI>().CollectReward(gameObject); 
         }
     }
 }
