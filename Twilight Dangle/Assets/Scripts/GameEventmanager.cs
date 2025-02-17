@@ -6,17 +6,22 @@ using UnityEngine.SceneManagement;
 public class GameEventmanager : MonoBehaviour
 {
     // Start is called before the first frame update
-     private bool isPaused = false;
-     public GameObject pauseMenuUI; 
+    private bool isPaused = false;
+    private bool isDead = false;
+    private int totalCollectibles;
+    public GameObject pauseMenuUI; 
+    public GameObject deathScreen;
+    public GameObject winScreen;
 
     void Start()
     {
-        
+        totalCollectibles = GameObject.FindGameObjectsWithTag("Rewards").Length; 
     }
-
     // Update is called once per frame
     void Update()
     {
+        if (isDead) return;  
+
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             if (isPaused)
@@ -42,5 +47,17 @@ public class GameEventmanager : MonoBehaviour
     {
         Time.timeScale = 1f; 
         SceneManager.LoadScene(SceneManager.GetActiveScene().name); 
+    }
+    public void PlayerDied()
+    {
+        isDead = true;
+        deathScreen.SetActive(true); 
+        Time.timeScale = 0f;
+    }
+
+    public void WinGame(){
+        winScreen.SetActive(true);
+        Time.timeScale = 0f;
+        isDead = true;
     }
 }

@@ -8,7 +8,7 @@ public class RewardUI : MonoBehaviour
     private TextMeshProUGUI collectibleText; // UI text reference
     public string rewardTag = "Rewards"; // Ensure all reward objects have this tag
     private int totalCollectibles; // Store the total number of collectibles
-
+    public GameEventmanager gameManager;    
     void Start()
     {
         collectibleText = GetComponent<TextMeshProUGUI>(); // Get UI component
@@ -23,6 +23,11 @@ public class RewardUI : MonoBehaviour
             totalCollectibles--; // Manually decrease count
             Destroy(reward); // Destroy the collected reward
             UpdateRewardUI();
+        }
+
+        if (totalCollectibles <= 0)
+        {
+            gameManager.WinGame();
         }
     }
 

@@ -5,7 +5,7 @@ public class PlayerMovement : MonoBehaviour
     public float speed = 15.0f;  // Increased movement speed
     public float rotationSpeed = 120.0f;  // Rotation speed
     public float jumpForce = 5.0f;
-
+    public GameEventmanager gameManager;
     private Rigidbody rb;
 
     private void Start()
@@ -51,6 +51,6 @@ public class PlayerMovement : MonoBehaviour
     }
 
     private void ResetGame(){
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+      gameManager.PlayerDied();
     }
 }
