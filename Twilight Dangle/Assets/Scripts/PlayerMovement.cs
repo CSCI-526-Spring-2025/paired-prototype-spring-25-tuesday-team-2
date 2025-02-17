@@ -1,5 +1,5 @@
 using UnityEngine;
-
+using UnityEngine.SceneManagement;
 public class PlayerMovement : MonoBehaviour
 {
     public float speed = 15.0f;  // Increased movement speed
@@ -40,5 +40,17 @@ public class PlayerMovement : MonoBehaviour
             Quaternion turnRotation = Quaternion.Euler(0f, turn, 0f);
             rb.MoveRotation(rb.rotation * turnRotation);
         }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Enemy"))
+        {
+            ResetGame();
+        }
+    }
+
+    private void ResetGame(){
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }
